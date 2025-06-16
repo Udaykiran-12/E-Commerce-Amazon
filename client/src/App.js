@@ -7,8 +7,9 @@ import SignIn from "./components/signup_sign/SignIn";
 import SignUp from "./components/signup_sign/SignUp";
 import Cart from "./components/cart/Cart";
 import Buynow from "./components/buynow/Buynow";
-import { Routes, Route } from "react-router-dom";
-import CircularProgress from "@mui/material/CircularProgress";
+import { Switch, Route } from "react-router-dom"; // ✅ FIXED
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 import { useEffect, useState } from "react";
 
 function App() {
@@ -18,7 +19,7 @@ function App() {
     setTimeout(() => {
       setdata(true);
     }, 3000);
-  });
+  }, []); // ✅ add dependency array to avoid infinite re-renders
 
   return (
     <>
@@ -26,13 +27,13 @@ function App() {
         <>
           <Navbar />
           <Newnav />
-          <Routes>
-            <Route path="/" element={<Maincomp />} />
-            <Route path="/login" element={<SignIn />} />
-            <Route path="/register" element={<SignUp />} />
-            <Route path="/getproductsone/:id" element={<Cart />} />
-            <Route path="/buynow" element={<Buynow />} />
-          </Routes>
+          <Switch>
+            <Route exact path="/" component={Maincomp} />
+            <Route path="/login" component={SignIn} />
+            <Route path="/register" component={SignUp} />
+            <Route path="/getproductsone/:id" component={Cart} />
+            <Route path="/buynow" component={Buynow} />
+          </Switch>
           <Footer />
         </>
       ) : (

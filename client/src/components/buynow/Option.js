@@ -1,7 +1,8 @@
 import React from "react";
 import { LoginContext } from "../context/ContextProvider";
 import { useContext , useState} from "react";
-import { Snackbar } from "@mui/material";
+import Snackbar from "@material-ui/core/Snackbar"; // ✅ MUI v4
+
 
 
 

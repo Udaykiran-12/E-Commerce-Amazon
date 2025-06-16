@@ -1,9 +1,10 @@
-import React from 'react'
+import React from 'react';
 import "./slide.css";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import {NavLink} from "react-router-dom"
-import { Divider } from '@mui/material';
+import { NavLink } from "react-router-dom";
+import Divider from '@material-ui/core/Divider'; // ✅ FIXED
+
 
 
 const responsive = {

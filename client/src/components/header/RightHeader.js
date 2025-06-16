@@ -1,12 +1,11 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./rightheader.css";
-import Avatar from "@mui/material/Avatar";
+import Avatar from "@material-ui/core/Avatar";
 import { LoginContext } from "../context/ContextProvider";
-import { useContext } from "react";
-import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import Divider from "@mui/material/Divider";
-import LogoutIcon from "@mui/icons-material/Logout";
+import Divider from "@material-ui/core/Divider";
+import LogoutIcon from "@material-ui/icons/ExitToApp";
+
 
 const RightHeader = ({Logclose , logoutuser}) => {
   const { account, setAccount } = useContext(LoginContext);

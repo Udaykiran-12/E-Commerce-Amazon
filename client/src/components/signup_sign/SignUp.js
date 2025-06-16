@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { Snackbar } from "@mui/material";
+import { NavLink, useHistory } from "react-router-dom";
+import Snackbar from "@material-ui/core/Snackbar"; // ✅ MUI v4
+
 
 const SignUp = () => {
   const [udata, setdata] = useState({
@@ -22,7 +23,7 @@ const SignUp = () => {
     }));
   };
 
-  const navigate = useNavigate();
+  const navigate = useHistory();
 
   const senddata = async (e) => {
     e.preventDefault();

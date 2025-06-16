@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./buynow.css";
-import { Divider } from "@mui/material";
+import Divider from "@material-ui/core/Divider"; // ✅ FIXED
 import Option from "./Option";
 import Right from "./Right";
 import Subtotal from "./Subtotal";
-import { useEffect } from "react";
+
 
 const Buynow = () => {
   const [cartdata, setdata] = useState("");

@@ -1,28 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./navbar.css";
-import SearchIcon from "@mui/icons-material/Search";
-import Badge from "@mui/material/Badge";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import Avatar from "@mui/material/Avatar";
-import { NavLink, useNavigate } from "react-router-dom";
+import SearchIcon from "@material-ui/icons/Search";
+import Badge from "@material-ui/core/Badge";
+import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import Avatar from "@material-ui/core/Avatar";
+import { NavLink, useHistory } from "react-router-dom";
 import { LoginContext } from "../context/ContextProvider";
-import { useContext, useEffect } from "react";
 import RightHeader from "./RightHeader";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import Drawer from "@mui/material/Drawer";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import LogoutIcon from "@mui/icons-material/Logout";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+import Drawer from "@material-ui/core/Drawer";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import LogoutIcon from "@material-ui/icons/ExitToApp"; // or remove if unused
+import Snackbar from "@material-ui/core/Snackbar";
+// Remove MuiAlert — not available in MUI v4
 import { useSelector, useDispatch } from "react-redux";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+
 
 const Navbar = () => {
   const { account, setAccount } = useContext(LoginContext);
-  const history = useNavigate();
+  const history = useHistory();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -230,20 +230,8 @@ const Navbar = () => {
       </nav>
 
       {/* Snackbar Component */}
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={3000}
-        onClose={() => setOpenSnackbar(false)}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      >
-        <MuiAlert
-          onClose={() => setOpenSnackbar(false)}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          Logged out successfully!
-        </MuiAlert>
-      </Snackbar>
+     <Snackbar open={open} autoHideDuration={3000} message="Successfully logged in!" />
+
     </header>
   );
 };

@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./signup.css";
-import { NavLink, useNavigate } from "react-router-dom";
-import { Snackbar } from "@mui/material";
+import { NavLink, useHistory } from "react-router-dom";
+import Snackbar from "@material-ui/core/Snackbar"; // ✅ FIXED
 import { LoginContext } from "../context/ContextProvider";
-import { useContext } from "react";
+
 
 const SignIn = () => {
   const [logdata, setdata] = useState({
@@ -11,7 +11,7 @@ const SignIn = () => {
     password: "",
   });
 
-  const navigate = useNavigate();
+  const navigate = useHistory();
   const { account, setAccount } = useContext(LoginContext);
 
   // Snackbar state

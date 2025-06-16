@@ -1,12 +1,11 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./cart.css";
-import { Divider } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
-import { useEffect } from "react";
-import { useState } from "react";
+import Divider from "@material-ui/core/Divider";
+import { useHistory, useParams } from "react-router-dom"; // ✅ fixed
 import { LoginContext } from "../context/ContextProvider";
-import { useContext } from "react";
-import CircularProgress from "@mui/material/CircularProgress";
+import CircularProgress from "@material-ui/core/CircularProgress";
+
+
 
 const Cart = () => {
   const { id } = useParams();
@@ -14,7 +13,7 @@ const Cart = () => {
   
   
    
-  const history = useNavigate();
+  const history = useHistory();
   // console.log(inddata);
 
   const{account , setAccount} = useContext(LoginContext)
