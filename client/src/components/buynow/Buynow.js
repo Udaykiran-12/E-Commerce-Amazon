@@ -11,7 +11,7 @@ const Buynow = () => {
   
 
   const buydata = async () => {
-    const res = await fetch("/cartdetails", {
+    const res = await fetch("https://amazon-clone1-tye1.onrender.com/cartdetails", {
       method: "GET",
       headers: {
         Accept: "application/json",
