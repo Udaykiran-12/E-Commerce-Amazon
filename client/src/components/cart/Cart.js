@@ -19,7 +19,7 @@ const Cart = () => {
   const{account , setAccount} = useContext(LoginContext)
 
   const getdata = async () => {
-    const data = await fetch(`/getproductsone/${id}`, {
+    const data = await fetch(`https://amazon-clone1-tye1.onrender.com/getproductsone/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
