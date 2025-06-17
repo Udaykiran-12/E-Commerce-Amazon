@@ -17,8 +17,13 @@ app.use(router);
 
 const port = process.env.PORT || 8005;
 
+app.get("/", (req, res) => {
+  res.send("✅ API is working!");
+});
+
 app.listen(port , () =>{
     console.log(`Server is running at port ${port}`);
 });
 
-Defaultdata();
+// 🔒 Handle errors during initial DB seeding
+Defaultdata().catch((err) => console.error("Error in Defaultdata:", err));
