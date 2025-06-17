@@ -42,7 +42,7 @@ const Cart = () => {
   }, [id]);
 
 
-  const addtocart = async (id) => {
+  const addtocart = async () => {
     const checkres = await fetch(`https://amazon-clone1-tye1.onrender.com/addcart/${id}`, {
       method: "POST",
       headers: {
@@ -82,7 +82,7 @@ const Cart = () => {
             <div className="cart_btn">
               <button
                 className="cart_btn1"
-                onClick={() => addtocart(inddata.id)}
+                onClick={() => addtocart()}
               >
                 Add to Cart
               </button>
