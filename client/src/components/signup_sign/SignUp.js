@@ -29,7 +29,7 @@ const SignUp = () => {
     e.preventDefault();
     const { fname, email, mobile, password, cpassword } = udata;
 
-    const res = await fetch("/register", {
+    const res = await fetch("https://amazon-clone1-tye1.onrender.com/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ fname, email, mobile, password, cpassword }),
