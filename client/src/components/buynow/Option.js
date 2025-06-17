@@ -20,7 +20,7 @@ const Option = ({ deleteData , get }) => {
 
   const removedata = async () => {
     try {
-      const res = await fetch(`/remove/${deleteData}`, {
+      const res = await fetch(`https://amazon-clone1-tye1.onrender.com/remove/${deleteData}`, {
         method: "DELETE",
         headers: {
           Accept: "application/json",
