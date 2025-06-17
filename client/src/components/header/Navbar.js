@@ -43,7 +43,7 @@ const Navbar = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false); // Snackbar state
 
   const getvaliduserdetail = async () => {
-    const res = await fetch("/validuser", {
+    const res = await fetch("https://amazon-clone1-tye1.onrender.com/validuser", {
       method: "GET",
       headers: {
         Accept: "application/json",
@@ -72,7 +72,7 @@ const Navbar = () => {
 
   // Logout function with Snackbar integration
   const logoutuser = async () => {
-    const res = await fetch("/logout", {
+    const res = await fetch("https://amazon-clone1-tye1.onrender.com/logout", {
       method: "GET",
       headers: {
         Accept: "application/json",
