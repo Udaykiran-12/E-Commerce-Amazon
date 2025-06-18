@@ -22,11 +22,7 @@ A fully functional Amazon-style e-commerce platform developed using the **MERN S
 - 🍪 Secure cookie handling with JWT
 - ✅ Mobile responsive UI with clean user experience
 
-## 📸 Screenshots
 
-| Home Page | Product Detail | Cart View |
-|-----------|----------------|-----------|
-| ![home](https://user-images.githubusercontent.com/your-id/home.png) | ![product](https://user-images.githubusercontent.com/your-id/product.png) | ![cart](https://user-images.githubusercontent.com/your-id/cart.png) |
 
 ## 📂 Folder Structure
 
