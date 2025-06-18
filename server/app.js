@@ -31,8 +31,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Handle preflight requests
-app.options("*", cors());
+
 
 // Routes
 app.use(router);
