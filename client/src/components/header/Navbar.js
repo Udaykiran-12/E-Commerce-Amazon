@@ -12,88 +12,89 @@ import MenuIcon from "@material-ui/icons/Menu";
 import Drawer from "@material-ui/core/Drawer";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import LogoutIcon from "@material-ui/icons/ExitToApp"; // or remove if unused
+import LogoutIcon from "@material-ui/icons/ExitToApp";
 import Snackbar from "@material-ui/core/Snackbar";
-// Remove MuiAlert — not available in MUI v4
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-
 
 const Navbar = () => {
   const { account, setAccount } = useContext(LoginContext);
   const history = useHistory();
 
   const [anchorEl, setAnchorEl] = useState(null);
+  const [dropen, setDropen] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [text, setText] = useState("");
+  const [liopen, setLiOpen] = useState(true);
+
+  const { products } = useSelector((state) => state.getproductsdata);
+
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  //For Search Feature
-  const [text, setText] = useState("");
-  console.log(text);
-  const [liopen, setLiOpen] = useState(true);
-  const { products } = useSelector((state) => state.getproductsdata);
-
-  const [dropen, setDropen] = useState(false);
-  const [openSnackbar, setOpenSnackbar] = useState(false); // Snackbar state
-
-  const getvaliduserdetail = async () => {
-    const res = await fetch("https://amazon-clone1-tye1.onrender.com/validuser", {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-
-    const data = await res.json();
-
-    if (res.status !== 201) {
-      console.log("error");
-    } else {
-      console.log("validdata");
-      setAccount(data);
-    }
-  };
-
-  const handleopen = () => {
-    setDropen(true);
-  };
-
-  const handledrclose = () => {
-    setDropen(false);
-  };
-
-  // Logout function with Snackbar integration
-  const logoutuser = async () => {
-    const res = await fetch("https://amazon-clone1-tye1.onrender.com/logout", {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-
-    if (res.status !== 201) {
-      console.log("Can't Logout User Due to Some Error");
-    } else {
-      console.log("User logged out successfully");
-      setAccount(false);
-      setOpenSnackbar(true); // Show snackbar
-      history("/");
-    }
-  };
+  const handleDrawerOpen = () => setDropen(true);
+  const handleDrawerClose = () => setDropen(false);
 
   const getText = (items) => {
     setText(items);
     setLiOpen(false);
+  };
+
+  const getvaliduserdetail = async () => {
+    try {
+      const res = await fetch("https://amazon-clone1-tye1.onrender.com/validuser", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (res.status === 201) {
+        const data = await res.json();
+        setAccount(data);
+      } else {
+        console.warn("User not valid or session expired");
+      }
+    } catch (err) {
+      console.error("Error validating user:", err);
+    }
+  };
+
+  const logoutuser = async () => {
+    try {
+      const res = await fetch("https://amazon-clone1-tye1.onrender.com/logout", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (res.status === 201) {
+        setAccount(false);
+        setOpenSnackbar(true);
+        history.push("/");
+      } else {
+        console.error("Logout failed");
+      }
+    } catch (err) {
+      console.error("Logout error:", err);
+    }
+  };
+
+  const handleSnackbarClose = () => {
+    setOpenSnackbar(false);
   };
 
   useEffect(() => {
@@ -104,12 +105,12 @@ const Navbar = () => {
     <header>
       <nav>
         <div className="left">
-          <IconButton className="hamburgur" onClick={handleopen}>
+          <IconButton className="hamburgur" onClick={handleDrawerOpen}>
             <MenuIcon style={{ color: "#fff" }} />
           </IconButton>
 
-          <Drawer open={dropen}>
-            <RightHeader Logclose={handledrclose} logoutuser={logoutuser} />
+          <Drawer open={dropen} onClose={handleDrawerClose}>
+            <RightHeader Logclose={handleDrawerClose} logoutuser={logoutuser} />
           </Drawer>
 
           <div className="navlogo">
@@ -123,33 +124,23 @@ const Navbar = () => {
               type="text"
               onChange={(e) => getText(e.target.value)}
               placeholder="Search Products"
-              name=""
-              id=""
             />
             <div className="search_icon">
               <SearchIcon id="search" />
             </div>
 
-            {/* Search Filter */}
             {text && (
               <List className="extrasearch" hidden={liopen}>
                 {products
                   .filter((product) =>
-                    product.title.longTitle
-                      .toLowerCase()
-                      .includes(text.toLowerCase())
+                    product.title.longTitle.toLowerCase().includes(text.toLowerCase())
                   )
                   .map((product) => (
-                    <div className="listitem">
-                      <ListItem>
-                        <NavLink
-                          to={`/getproductsone/${product.id}`}
-                          onClick={() => setLiOpen(true)}
-                        >
-                          {product.title.longTitle}
-                        </NavLink>
-                      </ListItem>
-                    </div>
+                    <ListItem key={product.id} onClick={() => setLiOpen(true)}>
+                      <NavLink to={`/getproductsone/${product.id}`}>
+                        {product.title.longTitle}
+                      </NavLink>
+                    </ListItem>
                   ))}
               </List>
             )}
@@ -157,61 +148,40 @@ const Navbar = () => {
         </div>
 
         <div className="right">
-          {!account ? (
+          {!account && (
             <div className="nav_btn">
               <NavLink to="/login">Signin</NavLink>
             </div>
-          ) : (
-            ""
           )}
 
           <div className="cart_btn">
-            {account ? (
-              <NavLink to="/buynow">
-                <Badge
-                  badgeContent={account?.carts?.length || 0}
-                  color="primary"
-                >
-                  <ShoppingCartIcon id="icon" />
-                </Badge>
-              </NavLink>
-            ) : (
-              <NavLink to="/login">
-                <Badge badgeContent={0} color="primary">
-                  <ShoppingCartIcon id="icon" />
-                </Badge>
-              </NavLink>
-            )}
-
+            <NavLink to={account ? "/buynow" : "/login"}>
+              <Badge badgeContent={account?.carts?.length || 0} color="primary">
+                <ShoppingCartIcon id="icon" />
+              </Badge>
+            </NavLink>
             <p>Cart</p>
           </div>
-          {account ? (
-            <Avatar
-              className="avtar2"
-              id="basic-button"
-              aria-controls={open ? "basic-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
-              onClick={handleClick}
-            >
-              {account.fname[0].toUpperCase()}
-            </Avatar>
-          ) : (
-            <Avatar
-              className="avtar"
-              id="basic-button"
-              aria-controls={open ? "basic-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
-              onClick={handleClick}
-            />
-          )}
+
+          <Avatar
+            className={account ? "avtar2" : "avtar"}
+            id="basic-button"
+            aria-controls={open ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+            onClick={handleClick}
+          >
+            {account?.fname ? account.fname[0].toUpperCase() : ""}
+          </Avatar>
+
           <Menu
             id="basic-menu"
             anchorEl={anchorEl}
             open={open}
             onClose={handleClose}
-            slotProps={{ list: { "aria-labelledby": "basic-button" } }}
+            getContentAnchorEl={null}
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            transformOrigin={{ vertical: "top", horizontal: "center" }}
           >
             <MenuItem onClick={handleClose}>My account</MenuItem>
             {account && (
@@ -221,17 +191,19 @@ const Navbar = () => {
                   handleClose();
                 }}
               >
-                Logout&nbsp;
-                <LogoutIcon />
+                Logout <LogoutIcon style={{ marginLeft: 8 }} />
               </MenuItem>
             )}
           </Menu>
         </div>
       </nav>
 
-      {/* Snackbar Component */}
-     <Snackbar open={open} autoHideDuration={3000} message="Successfully logged in!" />
-
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        message="You have logged out successfully!"
+      />
     </header>
   );
 };
