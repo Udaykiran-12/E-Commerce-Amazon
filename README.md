@@ -1,21 +1,93 @@
-🛒 E-Commerce Website Clone (Amazon Inspired)
-Tech Stack: React.js, Node.js, Express.js, MongoDB, JWT, Render
 
-Description:
-Developed and deployed a full-stack e-commerce platform replicating core features of Amazon, enabling users to register, log in, browse products, manage their cart, and perform secure checkout simulations. Built with MERN stack and hosted on Render with dynamic CORS and authentication handling.
+# 🛒 Amazon E-Commerce Clone – MERN Stack Web App
 
-✅ Key Features:
-User Authentication: Secure login/register using JWT tokens and cookie-based session management.
+A fully functional Amazon-style e-commerce platform developed using the **MERN Stack (MongoDB, Express.js, React.js, Node.js)**. This project supports user registration, login, product browsing, and a dynamic shopping cart with authentication.
 
-Product Listing & Details: Dynamic product data fetched from MongoDB with responsive UI using React.
+🚀 **Live Demo**: [https://e-commerce-amazon1.onrender.com](https://e-commerce-amazon1.onrender.com)
 
-Add to Cart: Logged-in users can add/remove items from cart (protected routes via middleware).
+## ⚙️ Tech Stack
 
-Cart Persistence: Cart data is linked to the authenticated user and stored in the database.
+- **Frontend:** React.js, Context API, Custom CSS
+- **Backend:** Node.js, Express.js, MongoDB, Mongoose
+- **Authentication:** JWT, bcrypt, cookie-based auth
+- **State Management:** React Context API
+- **Deployment:** Render
 
-CORS & Cookie Security: Configured CORS headers to support cross-origin credentials for frontend-backend integration.
+## ✨ Features
 
-Deployment & Debugging: Identified and fixed production-level errors (e.g., path-to-regexp, cookie mismatch, CORS issues) during live deployment on Render.
+- 🧾 User registration and login with encrypted passwords
+- 🛍️ Product listing and single product detail pages
+- 🛒 Add to cart functionality with session persistence
+- 🔒 Protected routes for cart and checkout
+- 🍪 Secure cookie handling with JWT
+- ✅ Mobile responsive UI with clean user experience
+
+## 📸 Screenshots
+
+| Home Page | Product Detail | Cart View |
+|-----------|----------------|-----------|
+| ![home](https://user-images.githubusercontent.com/your-id/home.png) | ![product](https://user-images.githubusercontent.com/your-id/product.png) | ![cart](https://user-images.githubusercontent.com/your-id/cart.png) |
+
+## 📂 Folder Structure
+
+```
+E-Commerce-Amazon/
+├── client/                  # React Frontend
+│   ├── src/
+│   │   ├── components/      # Navbar, ProductCard, etc.
+│   │   ├── pages/           # Home, SignIn, Cart, etc.
+│   │   └── context/         # Auth & cart context
+│   └── public/
+├── server/                  # Express Backend
+│   ├── models/              # Mongoose Schemas
+│   ├── routes/              # Express routers
+│   ├── middleware/          # Auth middleware
+│   ├── db/                  # MongoDB connection config
+│   ├── defualtData.js       # Product seeding script
+│   └── app.js               # Entry point
+└── .env.example             # Example environment variables
+```
+
+## 🚀 Getting Started
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/Udaykiran-12/E-Commerce-Amazon.git
+cd E-Commerce-Amazon
+```
+
+### 2. Install dependencies for both client and server
+```bash
+cd server && npm install
+cd ../client && npm install
+```
+
+### 3. Create environment file in `server/.env`
+```env
+KEY=your_jwt_secret_key
+MONGODB_URI=your_mongodb_connection_string
+PORT=8005
+```
+
+### 4. Run the development servers
+```bash
+# Start backend
+cd server
+node app.js
+
+# In another terminal, start frontend
+cd ../client
+npm start
+```
+
+## ✍️ Author
+
+**Pedduri Udaykiran**  
+- [GitHub](https://github.com/Udaykiran-12)  
+- [LinkedIn](https://www.linkedin.com/in/pedduri-udaykiran)
 
 
-Project Live Demo = "https://e-commerce-amazon1.onrender.com/"
+
+## 🙌 Acknowledgements
+
+- Inspired by the UI/UX and functionality of [Amazon](https://www.amazon.com)
