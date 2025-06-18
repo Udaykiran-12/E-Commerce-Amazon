@@ -1,89 +1,94 @@
 import React, { useEffect, useState, useContext } from "react";
 import "./cart.css";
 import Divider from "@material-ui/core/Divider";
-import { useHistory, useParams } from "react-router-dom"; // ✅ fixed
+import { useHistory, useParams } from "react-router-dom";
 import { LoginContext } from "../context/ContextProvider";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-
-
 const Cart = () => {
   const { id } = useParams();
-  const [inddata, setdata] = useState("");
-  
-  
-   
   const history = useHistory();
-  // console.log(inddata);
+  const { account, setAccount } = useContext(LoginContext);
 
-  const{account , setAccount} = useContext(LoginContext)
+  const [inddata, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const getdata = async () => {
-    const data = await fetch(`https://amazon-clone1-tye1.onrender.com/getproductsone/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    setLoading(true);
+    try {
+      const res = await fetch(`https://amazon-clone1-tye1.onrender.com/getproductsone/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    const res = await data.json();
-    // console.log(res);
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("Error fetching product:", text);
+        return;
+      }
 
-    if (data.status !== 201) {
-      console.log("No data Available");
-    } else {
-      setdata(res);
+      const data = await res.json();
+      setData(data);
+    } catch (err) {
+      console.error("❌ Error in getdata():", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    setTimeout(getdata , 1000)
-  
+    getdata();
   }, [id]);
 
-
   const addtocart = async () => {
-    const checkres = await fetch(`https://amazon-clone1-tye1.onrender.com/addcart/${id}`, {
-      method: "POST",
-      headers: {
-        Accept : "application/json",
-        "Content-Type": "application/json",
-      },
+    try {
+      const res = await fetch(`https://amazon-clone1-tye1.onrender.com/addcart/${id}`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ inddata }),
+        credentials: "include",
+      });
 
-      body : JSON.stringify({
-        inddata
-      }),
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        const text = await res.text();
+        console.error("❌ Non-JSON response from server:", text);
+        alert("Server error: " + text);
+        return;
+      }
 
-      credentials : "include"
-
-    });
-
-    const data1 = await checkres.json();
-
-    if(checkres.status === 401 || !data1){
-      console.log("Invalid User");
-      alert("Invalid User")
-    }else{
-      history("/buynow")
-
-       
-          setAccount(data1)
-        
+      if (res.status === 401 || !data) {
+        alert("❌ Invalid user. Please login.");
+      } else {
+        setAccount(data);
+        history.push("/buynow");
+      }
+    } catch (err) {
+      console.error("❌ Error in addtocart():", err);
+      alert("Something went wrong. Please try again.");
     }
   };
 
   return (
     <div className="cart_section">
-      {inddata && Object.keys(inddata).length && (
+      {loading ? (
+        <div className="circle">
+          <CircularProgress />
+          <h2>Loading...</h2>
+        </div>
+      ) : inddata && Object.keys(inddata).length > 0 ? (
         <div className="cart_container">
           <div className="left_cart">
             <img src={inddata.url} alt="cart_img" />
-
             <div className="cart_btn">
-              <button
-                className="cart_btn1"
-                onClick={() => addtocart()}
-              >
+              <button className="cart_btn1" onClick={addtocart}>
                 Add to Cart
               </button>
               <button className="cart_btn2">Buy Now</button>
@@ -94,68 +99,44 @@ const Cart = () => {
             <h3>{inddata.title.shortTitle}</h3>
             <h4>{inddata.title.longTitle}</h4>
             <Divider />
-            <p className="mrp">M.R.P. : &#8377;{inddata.price.mrp}</p>
+            <p className="mrp">M.R.P. : ₹{inddata.price.mrp}</p>
             <p>
-              Deal of the Day :{" "}
-              <span style={{ color: "#B12704" }}>
-                {" "}
-                &#8377;{inddata.price.cost}
-              </span>
+              Deal of the Day :
+              <span style={{ color: "#B12704" }}> ₹{inddata.price.cost}</span>
             </p>
             <p>
-              You Save :{" "}
+              You Save :
               <span style={{ color: "#B12704" }}>
-                {" "}
-                &#8377;{inddata.price.mrp - inddata.price.cost} (
-                {inddata.price.discount})
+                ₹{inddata.price.mrp - inddata.price.cost} ({inddata.price.discount})
               </span>
             </p>
 
             <div className="discount_box">
               <h5>
-                Discount :{" "}
+                Discount :
                 <span style={{ color: "#111" }}>{inddata.discount}</span>
               </h5>
               <h4>
-                Free Delivery :{" "}
-                <span style={{ color: "#111", fontWeight: 600 }}>
-                  Oct 8 - 21{" "}
-                </span>{" "}
-                &nbsp; Details
+                Free Delivery :
+                <span style={{ fontWeight: 600 }}> Oct 8 - 21 </span> &nbsp; Details
               </h4>
               <p>
-                Fastest Delivert :{" "}
-                <span style={{ color: "#111", fontWeight: 600 }}>
-                  Tomorrow 11AM
-                </span>
+                Fastest Delivery :
+                <span style={{ fontWeight: 600 }}> Tomorrow 11AM </span>
               </p>
             </div>
 
             <p className="description">
-              About the Item :&nbsp;
-              <span
-                style={{
-                  color: "#565959",
-                  fontSize: 14,
-                  fontWeight: 500,
-                  letterSpacing: "0.4px",
-                }}
-              >
+              About the Item:&nbsp;
+              <span style={{ color: "#565959", fontSize: 14, fontWeight: 500 }}>
                 {inddata.description}
               </span>
             </p>
           </div>
         </div>
+      ) : (
+        <h2>No product data available</h2>
       )}
-
-      {
-        !inddata ? 
-          <div className="circle">
-               <CircularProgress />
-               <h2>Loading...</h2>
-           </div> : ""
-      }
-
     </div>
   );
 };
