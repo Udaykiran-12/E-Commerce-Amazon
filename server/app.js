@@ -12,7 +12,12 @@ const cookieParser = require("cookie-parser");
 
 app.use(express.json())
 app.use(cookieParser(""))
-app.use(cors());
+
+app.use(cors({
+    origin: "https://e-commerce-amazon1.onrender.com", // your frontend domain
+    credentials: true
+}));
+
 app.use(router);
 
 const port = process.env.PORT || 8005;
