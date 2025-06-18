@@ -1,49 +1,51 @@
 require("dotenv").config();
 const express = require("express");
-const app = express();
 const mongoose = require("mongoose");
-require("./db/conn");
-
-const Products = require("./models/productsSchema");
-const Defaultdata = require("./defualtData");
 const cors = require("cors");
-const router = require("./routes/router");
 const cookieParser = require("cookie-parser");
 
-// ✅ Enable cookie parsing and JSON
-app.use(cookieParser());
+require("./db/conn");
+const Products = require("./models/productsSchema");
+const Defaultdata = require("./defualtData");
+const router = require("./routes/router");
+
+const app = express();
+const PORT = process.env.PORT || 8005;
+
+// Middleware
 app.use(express.json());
+app.use(cookieParser());
 
-// ✅ Fix CORS headers completely
-app.use(
-  cors({
-    origin: "https://e-commerce-amazon1.onrender.com", // your frontend URL
-    credentials: true,
-  })
-);
+// CORS Setup
+app.use(cors({
+  origin: "https://e-commerce-amazon1.onrender.com", // your frontend domain
+  credentials: true
+}));
 
-// ✅ Add CORS headers to all responses (important for Render sometimes)
+// Manually set headers for all responses
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "https://e-commerce-amazon1.onrender.com");
   res.header("Access-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
 
-// ✅ Use your routes
+// Handle preflight requests
+app.options("*", cors());
+
+// Routes
 app.use(router);
 
-// ✅ Default API route
+// Root route
 app.get("/", (req, res) => {
   res.send("✅ API is working!");
 });
 
-// ✅ Start server
-const port = process.env.PORT || 8005;
-app.listen(port, () => {
-  console.log(`Server is running at port ${port}`);
+// Start server
+app.listen(PORT, () => {
+  console.log(`🚀 Server is running at port ${PORT}`);
 });
 
-// ✅ DB seeding
+// Seed initial data
 Defaultdata().catch((err) => console.error("Error in Defaultdata:", err));
