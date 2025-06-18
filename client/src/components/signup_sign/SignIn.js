@@ -1,9 +1,8 @@
 import React, { useState, useContext } from "react";
 import "./signup.css";
 import { NavLink, useHistory } from "react-router-dom";
-import Snackbar from "@material-ui/core/Snackbar"; // ✅ FIXED
+import Snackbar from "@material-ui/core/Snackbar";
 import { LoginContext } from "../context/ContextProvider";
-
 
 const SignIn = () => {
   const [logdata, setdata] = useState({
@@ -14,8 +13,11 @@ const SignIn = () => {
   const navigate = useHistory();
   const { account, setAccount } = useContext(LoginContext);
 
-  // Snackbar state
-  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "" });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "",
+  });
 
   const adddata = (e) => {
     const { name, value } = e.target;
@@ -29,27 +31,48 @@ const SignIn = () => {
     e.preventDefault();
     const { email, password } = logdata;
 
-    const res = await fetch("https://amazon-clone1-tye1.onrender.com/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    });
+    try {
+      const res = await fetch("https://amazon-clone1-tye1.onrender.com/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // ✅ Send cookies for authentication
+        body: JSON.stringify({ email, password }),
+      });
 
-    const data = await res.json();
+      let data;
+      const contentType = res.headers.get("content-type");
 
-    if (res.status === 422 || !data) {
-      setSnackbar({ open: true, message: "❌ " + data.error, severity: "error" });
-    } else {
-      setAccount(data);
-     
-      setdata({ email: "", password: "" });
-      navigate("/");
-      setSnackbar({ open: true, message: "✅ Login Successfully!", severity: "success" });
+      if (contentType && contentType.includes("application/json")) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        throw new Error(text);
+      }
+
+      if (!res.ok || !data) {
+        setSnackbar({
+          open: true,
+          message: "❌ " + (data?.error || "Login failed"),
+          severity: "error",
+        });
+      } else {
+        setAccount(data);
+        setdata({ email: "", password: "" });
+        navigate.push("/"); // ✅ redirect to home page
+        setSnackbar({
+          open: true,
+          message: "✅ Login Successfully!",
+          severity: "success",
+        });
+      }
+    } catch (err) {
+      setSnackbar({
+        open: true,
+        message: "❌ " + err.message,
+        severity: "error",
+      });
     }
   };
 
@@ -82,13 +105,15 @@ const SignIn = () => {
                   onChange={adddata}
                   value={logdata.password}
                   type="password"
-                  placeholder="At Least 6 characters"
+                  placeholder="At least 6 characters"
                   name="password"
                   id="password"
                 />
               </div>
 
-              <button className="signin_btn" onClick={senddata}>Continue</button>
+              <button className="signin_btn" onClick={senddata}>
+                Continue
+              </button>
             </form>
           </div>
 
@@ -103,7 +128,7 @@ const SignIn = () => {
           <Snackbar
             open={snackbar.open}
             message={snackbar.message}
-            autoHideDuration={2000}
+            autoHideDuration={3000}
             onClose={() => setSnackbar({ ...snackbar, open: false })}
             anchorOrigin={{ vertical: "top", horizontal: "center" }}
           />
